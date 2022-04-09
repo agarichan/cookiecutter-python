@@ -8,4 +8,5 @@
     "--exclude=test/*",
     "--max-complexity=10",
   ],
+  "python.linting.mypyEnabled": false,
 }
