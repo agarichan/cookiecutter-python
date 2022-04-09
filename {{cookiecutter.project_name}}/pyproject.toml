@@ -1,0 +1,48 @@
+[tool.poetry]
+name = "{{ cookiecutter.project_name }}"
+version = "0.0.0"
+description = ""
+authors = [""]
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "^{{ '.'.join(cookiecutter.python_version.split('.')[:2]) }}"
+
+[tool.poetry.dev-dependencies]
+
+[tool.poe.tasks]
+fmt = { shell = "isort src tests; black src tests" }
+lint = { shell = "pflake8 src tests && pyright src tests && black src tests --check && isort src tests --check-only" }
+test = { shell = "pytest && rm .coverage" }
+test-s = { shell = "pytest -s && rm .coverage" }
+
+[tool.pyright]
+pythonVersion = "{{ '.'.join(cookiecutter.python_version.split('.')[:2]) }}"
+
+[tool.flake8]
+max-line-length = {{ cookiecutter.max_line_length }}
+ignore = "E226,E302,E203,E41,W503,E722,E731"
+max-complexity = 10
+
+[tool.black]
+line-length = {{ cookiecutter.max_line_length }}
+exclude = '''
+(
+  .mypy_cache
+  | .pytest_cache
+  | .tox
+  | .venv
+  | dist
+)
+'''
+
+[tool.isort]
+line_length = {{ cookiecutter.max_line_length }}
+profile = "black"
+
+[tool.pytest.ini_options]
+addopts = "--cov=src --cov-report=term-missing:skip-covered --cov-report term --cov-report xml --asyncio-mode=strict"
+
+[build-system]
+requires = ["poetry-core>=1.0.0"]
+build-backend = "poetry.core.masonry.api"
